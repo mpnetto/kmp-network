@@ -6,7 +6,7 @@ plugins {
 
 kotlin {
     group = "com.github.mpnetto"
-    version = "0.1.1-alpha"
+    version = "0.1.2-alpha"
 
     androidLibrary {
         namespace = "org.sacada.network"
@@ -28,7 +28,7 @@ kotlin {
     jvm("desktop")
 
     sourceSets {
-        commonMain {
+        val commonMain by getting {
             dependencies {
                 implementation(libs.ktor.client.core)
                 api(libs.kotlinx.coroutines.core)
@@ -38,19 +38,23 @@ kotlin {
             }
         }
 
-
-
-        androidMain {
+        val androidMain by getting {
             dependencies {
                 implementation(libs.ktor.client.okhttp)
             }
         }
 
-        iosMain {
+        val iosMain by creating {
+            dependsOn(commonMain)
             dependencies {
                 implementation(libs.ktor.client.darwin)
             }
         }
+
+        val iosX64Main by getting { dependsOn(iosMain) }
+        val iosArm64Main by getting { dependsOn(iosMain) }
+        val iosSimulatorArm64Main by getting { dependsOn(iosMain) }
+
 
         val desktopMain by getting {
             dependencies {

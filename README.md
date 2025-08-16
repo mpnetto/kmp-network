@@ -78,14 +78,14 @@ kotlin {
     sourceSets {
         commonMain {
             dependencies {
-                implementation("com.github.mpnetto:network:0.1.1-alpha")
+                implementation("com.github.mpnetto:network:0.1.2-alpha")
             }
         }
     }
 }
 ```
 
-For Android-only projects: add inside `dependencies { implementation("com.github.mpnetto:network:0.1.1-alpha") }`.
+For Android-only projects: add inside `dependencies { implementation("com.github.mpnetto:network:0.1.2-alpha") }`.
 
 ## Key versions
 - Kotlin: 2.2.0
