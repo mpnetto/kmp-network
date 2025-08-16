@@ -4,6 +4,8 @@ plugins {
 }
 
 kotlin {
+    group = "com.github.mpnetto"
+    version = "0.1.0-alpha"
 
     androidLibrary {
         namespace = "org.sacada.network"

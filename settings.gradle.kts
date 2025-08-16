@@ -1,6 +1,8 @@
 rootProject.name = "KmpNetwork"
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
+rootProject.name = "kmp-network"
+
 pluginManagement {
     repositories {
         google {

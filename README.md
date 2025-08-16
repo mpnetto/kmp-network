@@ -1,45 +1,47 @@
 # KmpNetwork
 
-Biblioteca de rede Kotlin Multiplatform (KMP) com Ktor para Android, iOS e Desktop (JVM).
+[![JitPack](https://jitpack.io/v/mpnetto/kmp-network.svg)](https://jitpack.io/#mpnetto/kmp-network)
 
-## Recursos
-- Cliente Ktor configurado com:
+Kotlin Multiplatform (KMP) networking library powered by Ktor for Android, iOS, and Desktop (JVM).
+
+## Features
+- Pre-configured Ktor HttpClient with:
   - ContentNegotiation (JSON via kotlinx-serialization)
-  - Logging de requisições/respostas
-- Wrapper de resultados (NetworkResult) para sucesso/erro
-- ApiClient com helpers tipados para GET e POST
-- DispatcherProvider multiplataforma
+  - Request/response Logging
+- Result wrapper (NetworkResult) for success/error
+- ApiClient with typed helpers for GET and POST
+- Multiplatform DispatcherProvider
 
-## Estrutura do projeto
-- `network/`: módulo de biblioteca KMP
-  - `commonMain/`: núcleo compartilhado (Ktor, modelos e utilitários)
-  - `androidMain/`, `iosMain/`, `desktopMain/`: implementações específicas por plataforma
-- `iosApp/`: projeto iOS (SwiftUI) para integração/execução no iOS
+## Project structure
+- `network/`: KMP library module
+  - `commonMain/`: shared core (Ktor, models, utilities)
+  - `androidMain/`, `iosMain/`, `desktopMain/`: platform-specific implementations
+- `iosApp/`: iOS (SwiftUI) project for integration/running on iOS
 
-## Alvos e requisitos
+## Targets & requirements
 - Android: minSdk 24, compileSdk 36
 - iOS: iosArm64, iosX64, iosSimulatorArm64
-- Desktop: JVM (gera JAR)
+- Desktop: JVM (JAR)
 
-Requisitos de ambiente:
+Environment requirements:
 - JDK 17+
-- Android SDK (para Android)
-- Xcode 15+ em macOS (para iOS)
+- Android SDK (for Android)
+- Xcode 15+ on macOS (for iOS)
 - Gradle via wrapper (`./gradlew`)
 
-## Como construir
-- Build completo do módulo:
+## Build
+- Full module build:
   - Windows: `gradlew clean :network:assemble`
   - macOS/Linux: `./gradlew clean :network:assemble`
 - Android (AAR): `:network:assembleRelease`
 - Desktop (JAR): `:network:desktopJar`
 - iOS (Frameworks):
-  - Dispositivo: `:network:linkReleaseFrameworkIosArm64`
-  - Simulador: `:network:linkReleaseFrameworkIosSimulatorArm64`
+  - Device: `:network:linkReleaseFrameworkIosArm64`
+  - Simulator: `:network:linkReleaseFrameworkIosSimulatorArm64`
 
-Os artefatos são gerados em `network/build/`.
+Artifacts are generated under `network/build/`.
 
-## Uso (exemplo Kotlin)
+## Usage (Kotlin example)
 ```kotlin
 import org.sacada.network.ApiClient
 import org.sacada.network.NetworkResult
@@ -50,19 +52,49 @@ suspend fun fetchTodos(): List<Todo> {
     val api = ApiClient(baseUrl = "https://example.com")
     return when (val res = api.get<List<Todo>>(path = "todos")) {
         is NetworkResult.Success -> res.data
-        is NetworkResult.Error -> emptyList() // trate o erro conforme sua necessidade
+        is NetworkResult.Error -> emptyList() // handle the error as needed
     }
 }
 ```
 
-## Versões principais
+## Installation via JitPack
+1) Add the JitPack repository:
+
+Gradle Kotlin DSL (settings.gradle.kts):
+
+```kotlin
+dependencyResolutionManagement {
+    repositories {
+        // other repositories
+        maven("https://jitpack.io")
+    }
+}
+```
+
+2) Add the dependency to your KMP commonMain:
+
+```kotlin
+kotlin {
+    sourceSets {
+        commonMain {
+            dependencies {
+                implementation("com.github.mpnetto:network:0.1.0-alpha")
+            }
+        }
+    }
+}
+```
+
+For Android-only projects: add inside `dependencies { implementation("com.github.mpnetto:network:0.1.0-alpha") }`.
+
+## Key versions
 - Kotlin: 2.2.0
 - Ktor: 3.2.3
 - Coroutines: 1.10.2
 
-## Notas
-- Namespace Android: `org.sacada.network`
-- Sem testes Android instrumentados neste módulo.
+## Notes
+- Android namespace: `org.sacada.network`
+- No Android instrumented tests in this module.
 
-## Contribuição
-Issues e PRs são bem-vindos.
+## Contributing
+Issues and PRs are welcome.
