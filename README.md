@@ -1,19 +1,68 @@
-This is a Kotlin Multiplatform project targeting Android, iOS.
+# KmpNetwork
 
-* [/composeApp](./composeApp/src) is for code that will be shared across your Compose Multiplatform applications.
-  It contains several subfolders:
-  - [commonMain](./composeApp/src/commonMain/kotlin) is for code that’s common for all targets.
-  - Other folders are for Kotlin code that will be compiled for only the platform indicated in the folder name.
-    For example, if you want to use Apple’s CoreCrypto for the iOS part of your Kotlin app,
-    the [iosMain](./composeApp/src/iosMain/kotlin) folder would be the right place for such calls.
-    Similarly, if you want to edit the Desktop (JVM) specific part, the [jvmMain](./composeApp/src/jvmMain/kotlin)
-    folder is the appropriate location.
+Biblioteca de rede Kotlin Multiplatform (KMP) com Ktor para Android, iOS e Desktop (JVM).
 
-* [/iosApp](./iosApp/iosApp) contains iOS applications. Even if you’re sharing your UI with Compose Multiplatform,
-  you need this entry point for your iOS app. This is also where you should add SwiftUI code for your project.
+## Recursos
+- Cliente Ktor configurado com:
+  - ContentNegotiation (JSON via kotlinx-serialization)
+  - Logging de requisições/respostas
+- Wrapper de resultados (NetworkResult) para sucesso/erro
+- ApiClient com helpers tipados para GET e POST
+- DispatcherProvider multiplataforma
 
-* [/shared](./shared/src) is for the code that will be shared between all targets in the project.
-  The most important subfolder is [commonMain](./shared/src/commonMain/kotlin). If preferred, you can add code to the platform-specific folders here too.
+## Estrutura do projeto
+- `network/`: módulo de biblioteca KMP
+  - `commonMain/`: núcleo compartilhado (Ktor, modelos e utilitários)
+  - `androidMain/`, `iosMain/`, `desktopMain/`: implementações específicas por plataforma
+- `iosApp/`: projeto iOS (SwiftUI) para integração/execução no iOS
 
+## Alvos e requisitos
+- Android: minSdk 24, compileSdk 36
+- iOS: iosArm64, iosX64, iosSimulatorArm64
+- Desktop: JVM (gera JAR)
 
-Learn more about [Kotlin Multiplatform](https://www.jetbrains.com/help/kotlin-multiplatform-dev/get-started.html)…
+Requisitos de ambiente:
+- JDK 17+
+- Android SDK (para Android)
+- Xcode 15+ em macOS (para iOS)
+- Gradle via wrapper (`./gradlew`)
+
+## Como construir
+- Build completo do módulo:
+  - Windows: `gradlew clean :network:assemble`
+  - macOS/Linux: `./gradlew clean :network:assemble`
+- Android (AAR): `:network:assembleRelease`
+- Desktop (JAR): `:network:desktopJar`
+- iOS (Frameworks):
+  - Dispositivo: `:network:linkReleaseFrameworkIosArm64`
+  - Simulador: `:network:linkReleaseFrameworkIosSimulatorArm64`
+
+Os artefatos são gerados em `network/build/`.
+
+## Uso (exemplo Kotlin)
+```kotlin
+import org.sacada.network.ApiClient
+import org.sacada.network.NetworkResult
+
+data class Todo(val id: Int, val title: String)
+
+suspend fun fetchTodos(): List<Todo> {
+    val api = ApiClient(baseUrl = "https://example.com")
+    return when (val res = api.get<List<Todo>>(path = "todos")) {
+        is NetworkResult.Success -> res.data
+        is NetworkResult.Error -> emptyList() // trate o erro conforme sua necessidade
+    }
+}
+```
+
+## Versões principais
+- Kotlin: 2.2.0
+- Ktor: 3.2.3
+- Coroutines: 1.10.2
+
+## Notas
+- Namespace Android: `org.sacada.network`
+- Sem testes Android instrumentados neste módulo.
+
+## Contribuição
+Issues e PRs são bem-vindos.
